@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-sky-shards",
-  "description": "",
-  "version": "0.0.1",
+  "description": "🔮 基于 https://github.com/VincentZyu233/sky-shards 的 Koishi 光遇国服、国际服碎片查询插件。使用 Puppeteer 网页截图，适配 QQ 官方 Bot Markdown 和按钮 🤖",
+  "version": "0.1.0",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -9,13 +9,18 @@
     "dist"
   ],
   "license": "MIT",
-  "scripts": {},
   "keywords": [
     "chatbot",
     "koishi",
     "plugin"
   ],
-  "devDependencies": {},
+  "koishi": {
+    "service": {
+      "required": [
+        "puppeteer"
+      ]
+    }
+  },
   "peerDependencies": {
     "koishi": "^4.18.7"
   }
