@@ -113,11 +113,12 @@ export function formatShardSummary(options: ShardSummaryOptions) {
   const { date, server, label, pageUrl, now, globalOverrides } = options
   const status = getShardStatus(date, server, now, globalOverrides)
   const serverEmoji = server === 'netease_cn' ? '🇨🇳' : '🌍'
-  const lines = [`${serverEmoji} ${label}：\t${formatDate(date)}`, `🔗 网页链接：\t${pageUrl}`, `🔮 是否有碎片：\t${status.hasShard ? '是' : '否'}`]
+  const lines = [`${serverEmoji} ${label}：\t${formatDate(date)}`, `🔮 是否有碎片：\t${status.hasShard ? '是' : '否'}`]
   if (status.isToday) {
     if (status.currentMap) lines.push(`🗺️ 当前碎片地点：\t${status.currentMap}`)
-    else if (status.nextCountdown) lines.push(`⏳ 下一次碎片时间：\t${status.nextCountdown}`)
+    else if (status.nextCountdown) lines.push(`⏳ 距离下次碎片：\t${status.nextCountdown}`)
   }
+  lines.push('🔗 网页链接：', pageUrl)
   return lines.join('\n')
 }
 

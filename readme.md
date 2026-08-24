@@ -1,10 +1,21 @@
 # koishi-plugin-sky-shards
 
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/VincentZyuApps/koishi-plugin-sky-shards)
+[![npm](https://img.shields.io/npm/v/koishi-plugin-sky-shards?style=flat-square&logo=npm)](https://www.npmjs.com/package/koishi-plugin-sky-shards)
+[![npm-download](https://img.shields.io/npm/dm/koishi-plugin-sky-shards?style=flat-square&logo=npm)](https://www.npmjs.com/package/koishi-plugin-sky-shards)
 
-[![Sky Shards Source](https://img.shields.io/badge/Sky%20Shards%20Source-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/VincentZyu233/sky-shards)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/VincentZyuApps/koishi-plugin-sky-shards)
+[![Gitee](https://img.shields.io/badge/Gitee-C71D23?style=for-the-badge&logo=gitee&logoColor=white)](https://gitee.com/vincent-zyu/koishi-plugin-sky-shards)
+
+[![Koishi Forum](https://img.shields.io/badge/Koishi%20Forum-xxxxx-5546A3?style=for-the-badge&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAABU0lEQVR42p2UQSsFYRSGnxnqLuytKWKpKFkQNsS%2FsOHPWPADLCmxU5S7UzYWNrJR7lYiRF2FeWzOMKZ7mXHqNNP5vvP2nu%2B850CY2lP4X1K31ZbaDm%2BpO%2Bpyp5wfAXVEPfRvO1JHf4AVQGbUh7j4EZ4VkrNCXPVRnf3CUBN1SH2KC28VGOV3ntRhNclZHdcAKYM11QR1oVBOXctzFlNgBTC8qmXxPQEegbVeYApIgJT6tg%2F0AdMp0B%2FBpCabK2AAmAAa%2F2GRBft1oBFPkqTAba7LCiAfQC9wClwAY1HJHepuiO29Yrsf1Dn1uiDU3RTYCtTkl1Leg8k9MB4NGgReI28rV3azgyCz0og01Xl1Uz1QX8uCTELm3UbkTF1VJ9Wr0tn3iBSGdjYG0XivE3VN3VD31PM4a3cc2tIGGI0VkTO7rLxGuiy25ejmjfqsvkSXui62TxaK03td4FXTAAAAAElFTkSuQmCC&logoColor=white)](https://forum.koishi.xyz/t/topic/xxxxx)
+[![QQ群](https://img.shields.io/badge/QQ群-1085190201-12B7F5?style=flat-square&logo=qq&logoColor=white)](https://qm.qq.com/q/ZHj33L5cuC)
 
 查询《光·遇》国服与国际服碎片，并将 [Sky Shards](https://github.com/VincentZyu233/sky-shards) 的首屏摘要渲染为图片。
+
+<h2>交流反馈</h2>
+<p>Bug 反馈 / 建议 / 插件开发交流，欢迎加群：</p>
+<p><del>插件使用问题 / Bug反馈 / 插件开发交流，欢迎加入QQ群：<b>259248174</b> （这个群G了）</del></p>
+<p>插件使用问题 / Bug反馈 / 插件开发交流，欢迎加入QQ群：<b>1085190201</b></p>
+<p>在群里直接艾特我，回复的更快哦~ ✨</p>
 
 ## 前置条件
 
@@ -60,7 +71,7 @@ group:proxy:
 
 | 配置项 | 类型 | 默认值 | 说明 |
 |---|---|---|---|
-| `url` | `string` | `"https://sky-shards-vincentzyu233-fork.pages.dev/"` | Sky Shards 站点根 URL；支持 Cloudflare Pages、反代或本地 Vite 地址 |
+| `url` | `string` | `"https://sky-shards-vincentzyu233-fork.pages.dev/"` | 默认使用 Cloudflare Pages；也可改为 GitHub Pages，或填写通过 `pnpm dev` 部署到本地或公网的 Vite HTTP 服务器地址 |
 | `displayTimeZone` | `string` | `"Asia/Shanghai"` | 截图中显示本地时间使用的 IANA 时区 |
 | `enableGlobalShardOverrides` | `boolean` | `false` | 🧪 是否读取上游前端国际服临时覆写数据；国服不会读取覆写 |
 | `enableShardProgressTimeline` | `boolean` | `true` | 是否显示 Sky Shards 的碎片时间轴和进度条；关闭后改为紧凑的三波时间摘要 |

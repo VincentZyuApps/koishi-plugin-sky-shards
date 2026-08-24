@@ -26,7 +26,7 @@ test('国服碎片尚未来临时显示倒计时，不显示地点', () => {
     now: new Date('2026-08-22T22:00:00.000Z'),
   })
 
-  assert.match(summary, /⏳ 下一次碎片时间：\t01 h 08 m 00 s/)
+  assert.match(summary, /⏳ 距离下次碎片：\t01 h 08 m 00 s/)
   assert.doesNotMatch(summary, /当前碎片地点/)
 })
 
@@ -39,8 +39,9 @@ test('非当日查询仅显示是否有碎片', () => {
     now: new Date('2026-08-24T00:00:00.000Z'),
   })
 
-  assert.equal(summary.split('\n').length, 3)
-  assert.doesNotMatch(summary, /当前碎片地点|下一次碎片时间/)
+  assert.equal(summary.split('\n').length, 4)
+  assert.match(summary, /🔗 网页链接：\nhttps:\/\/example\.test\//)
+  assert.doesNotMatch(summary, /当前碎片地点|距离下次碎片/)
 })
 
 test('国际服临时覆写可修改是否有碎片，国服不会读取覆写', () => {

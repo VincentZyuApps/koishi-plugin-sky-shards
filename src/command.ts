@@ -44,7 +44,7 @@ async function handleCommand(ctx: Context, session: Session, config: Config, def
     const summary = formatShardSummary({ date, server: definition.server, label: definition.label, pageUrl, now: rendered.renderedAt, globalOverrides: rendered.globalOverrides })
     await session.send([quote, h.image(rendered.image, 'image/jpeg'), `\n${summary}`])
     if (config.enableQQMarkdown && session.platform === 'qq') {
-      const markdown = [`# ${definition.label}`, '', `> 日期：${formatDate(date)}`, `> 排期服务器时区：${getServerZone(definition.server)}`, '', `[在 Sky Shards 打开详情](${pageUrl})`].join('\n')
+      const markdown = [`# ${definition.label}`, '', `> 日期：${formatDate(date)}`, `> 排期服务器时区：${getServerZone(definition.server)}`, '', `[【点我在 Sky Shards 网页 打开详情】](${pageUrl})`].join('\n')
       const keyboard = buildKeyboard(config.qqMarkdownKeyboardJson, { commandName: definition.name, cnCommandName: config.cnCommandName, globalCommandName: config.globalCommandName, pageUrl })
       await sendQQMarkdown(session, markdown, keyboard).catch(error => logger.warn('QQ Markdown 发送失败，将保留截图回复：%s', error instanceof Error ? error.message : String(error)))
     }
