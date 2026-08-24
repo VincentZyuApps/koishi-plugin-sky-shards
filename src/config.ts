@@ -16,6 +16,12 @@ export type BrowserProxyMode = typeof BROWSER_PROXY_MODE[keyof typeof BROWSER_PR
 
 export interface Config {
   // ==================
+  // 💬 消息发送配置字段
+  // ==================
+  enableQuote: boolean
+  enableWaitingHint: boolean
+
+  // ==================
   // 📌 指令配置字段
   // ==================
   cnCommandName: string
@@ -24,10 +30,13 @@ export interface Config {
   globalCommandAliases: string[]
 
   // ==================
-  // 🌐 数据页面配置字段
+  // 🌐 Sky Shards 页面与截图配置字段
   // ==================
   url: string
   displayTimeZone: string
+  enableGlobalShardOverrides: boolean
+  enableShardProgressTimeline: boolean
+  screenshotDelayMs: number
 
   // ==================
   // 🌐 浏览器网络配置字段
@@ -47,6 +56,18 @@ export interface Config {
 // ====================
 
 export const Config: Schema<Config> = Schema.intersect([
+  // ==================
+  // 💬 消息发送配置分组
+  // ==================
+  Schema.object({
+    enableQuote: Schema.boolean()
+      .default(true)
+      .description('💬 bot 发送等待提示、截图结果和错误消息时，是否引用触发指令的消息。'),
+    enableWaitingHint: Schema.boolean()
+      .default(true)
+      .description('⏳ 是否发送「正在获取并生成碎片信息，请稍候」等待提示；任务结束后会自动尝试撤回。'),
+  }).description('💬 消息发送配置'),
+
   // ==================
   // 📌 指令配置分组
   // ==================
@@ -68,7 +89,7 @@ export const Config: Schema<Config> = Schema.intersect([
   }).description('📌 指令配置'),
 
   // ==================
-  // 🌐 数据页面配置分组
+  // 🌐 Sky Shards 页面与截图配置分组
   // ==================
   Schema.object({
     url: Schema.string()
@@ -77,7 +98,20 @@ export const Config: Schema<Config> = Schema.intersect([
     displayTimeZone: Schema.string()
       .default('Asia/Shanghai')
       .description('🕒 截图中显示本地时间使用的 IANA 时区，例如 <code>Asia/Shanghai</code>。'),
-  }).description('🌐 数据页面配置'),
+    enableGlobalShardOverrides: Schema.boolean()
+      .experimental()
+      .default(false)
+      .description('🧪 是否读取上游前端国际服临时覆写数据，以同步特殊日期的碎片排期。默认关闭；国服不会读取覆写。'),
+    enableShardProgressTimeline: Schema.boolean()
+      .default(true)
+      .description('📊 是否在截图中显示 Sky Shards 的碎片时间轴和进度条；关闭后改为紧凑的三波时间摘要。'),
+    screenshotDelayMs: Schema.number()
+      .min(0)
+      .max(10_000)
+      .step(1)
+      .default(666)
+      .description('⏳ 截图前额外等待时间，单位毫秒。可用于等待网页动画和延迟加载内容完成。'),
+  }).description('🌐 Sky Shards 页面与截图配置'),
 
   // ==================
   // 🌐 浏览器网络配置分组

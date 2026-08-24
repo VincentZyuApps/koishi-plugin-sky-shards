@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { addDays, parseTargetDate } from '../src/date'
-import { buildPageUrl } from '../src/url'
+import { addDays, buildPageUrl, parseTargetDate } from '../src/page'
 import { renderShardScreenshot } from '../src/render'
 
 test('按服务器自然日解析偏移', () => {
@@ -25,6 +24,9 @@ test('生成包含服务器和时区的站点 URL', () => {
   assert.equal(url.pathname, '/sky-shards/zh/2026/08/24')
   assert.equal(url.searchParams.get('server'), 'netease_cn')
   assert.equal(url.searchParams.get('timezone'), 'Asia/Shanghai')
+  assert.equal(url.searchParams.get('legTimeline'), '1')
+  const compactUrl = new URL(buildPageUrl('https://example.test/', { year: 2026, month: 8, day: 24 }, 'netease_cn', 'Asia/Shanghai', false))
+  assert.equal(compactUrl.searchParams.get('legTimeline'), '0')
   assert.throws(() => buildPageUrl('https://example.test/', { year: 2026, month: 8, day: 24 }, 'netease_cn', 'GMT+8'))
 })
 
@@ -56,11 +58,11 @@ test('截图使用独立代理上下文并清理页面资源', async () => {
     },
   }
 
-  const image = await renderShardScreenshot(ctx as never, 'https://example.test/', {
+  const rendered = await renderShardScreenshot(ctx as never, 'https://example.test/', {
     server: 'socks5://127.0.0.1:7890', username: 'user', password: 'pass',
   })
 
-  assert.equal(image.toString(), 'jpeg')
+  assert.equal(rendered.image.toString(), 'jpeg')
   assert.equal(proxyServer, 'socks5://127.0.0.1:7890')
   assert.deepEqual(calls, ['viewport', 'authenticate', 'goto', 'selector', 'evaluate', 'idle', 'screenshot', 'page-close', 'context-close'])
 })

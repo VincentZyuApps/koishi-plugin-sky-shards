@@ -40,6 +40,13 @@ group:proxy:
 
 ## 配置项
 
+### 消息发送配置
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|---|---|---|---|
+| `enableQuote` | `boolean` | `true` | bot 发送等待提示、截图结果和错误消息时，是否引用触发指令的消息 |
+| `enableWaitingHint` | `boolean` | `true` | 是否显示“正在获取并生成碎片信息，请稍候”提示；任务结束后会自动尝试撤回 |
+
 ### 指令配置
 
 | 配置项 | 类型 | 默认值 | 说明 |
@@ -49,12 +56,15 @@ group:proxy:
 | `globalCommandName` | `string` | `"国际服碎片"` | 国际服碎片主指令名称 |
 | `globalCommandAliases` | `string[]` | `[“今日国际服碎片”, “国际服今日碎片”, “光遇国际服碎片”, “sky-global-shards”]` | 国际服碎片别名表格；空白、重复和与主指令同名的项会忽略 |
 
-### 数据页面配置
+### Sky Shards 页面与截图配置
 
 | 配置项 | 类型 | 默认值 | 说明 |
 |---|---|---|---|
 | `url` | `string` | `"https://sky-shards-vincentzyu233-fork.pages.dev/"` | Sky Shards 站点根 URL；支持 Cloudflare Pages、反代或本地 Vite 地址 |
 | `displayTimeZone` | `string` | `"Asia/Shanghai"` | 截图中显示本地时间使用的 IANA 时区 |
+| `enableGlobalShardOverrides` | `boolean` | `false` | 🧪 是否读取上游前端国际服临时覆写数据；国服不会读取覆写 |
+| `enableShardProgressTimeline` | `boolean` | `true` | 是否显示 Sky Shards 的碎片时间轴和进度条；关闭后改为紧凑的三波时间摘要 |
+| `screenshotDelayMs` | `number` | `666` | 截图前额外等待时间，单位毫秒；可用于等待网页动画和延迟加载内容完成 |
 
 ### 浏览器网络配置
 
