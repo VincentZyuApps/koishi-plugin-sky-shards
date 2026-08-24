@@ -14,6 +14,15 @@ export const BROWSER_PROXY_MODE = {
 
 export type BrowserProxyMode = typeof BROWSER_PROXY_MODE[keyof typeof BROWSER_PROXY_MODE]
 
+/** 🌗 Sky Shards 上游页面主题模式 */
+export const LIGHT_MODE = {
+  LIGHT: 'true',
+  DARK: 'false',
+  SYSTEM: 'system',
+} as const
+
+export type LightMode = typeof LIGHT_MODE[keyof typeof LIGHT_MODE]
+
 /** 🖼️ Puppeteer 截图输出格式 */
 export const SCREENSHOT_IMAGE_TYPES = {
   PNG: 'png',
@@ -43,6 +52,7 @@ export interface Config {
   // ==================
   url: string
   displayTimeZone: string
+  lightMode: LightMode
   enableGlobalShardOverrides: boolean
   enableShardProgressTimeline: boolean
   screenshotDelayMs: number
@@ -109,6 +119,14 @@ export const Config: Schema<Config> = Schema.intersect([
     displayTimeZone: Schema.string()
       .default('Asia/Shanghai')
       .description('🕒 截图中显示本地时间使用的 IANA 时区，例如 <code>Asia/Shanghai</code>。'),
+    lightMode: Schema.union([
+      Schema.const(LIGHT_MODE.LIGHT).description('☀️ 浅色模式（上游值 true）。'),
+      Schema.const(LIGHT_MODE.DARK).description('🌙 深色模式（上游值 false）。'),
+      Schema.const(LIGHT_MODE.SYSTEM).description('💻 跟随 Puppeteer Chromium 的系统配色偏好（上游默认）。'),
+    ])
+      .role('radio')
+      .default(LIGHT_MODE.SYSTEM)
+      .description('🌗 Sky Shards 页面与截图主题，直接对应上游 <code>lightMode</code> URL 参数。'),
     enableGlobalShardOverrides: Schema.boolean()
       .experimental()
       .default(false)

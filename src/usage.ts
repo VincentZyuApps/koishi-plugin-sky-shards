@@ -49,9 +49,12 @@ export const usage = `
 <code>国服碎片</code>
 <code>国际服碎片 +1</code>
 <code>国服碎片 20260824</code>
+<code>国服碎片 +1 --light-mode true</code>
+<code>国际服碎片 --lightMode false</code>
 </pre>
 
 <p>🗓️ 参数留空时查询对应服务器时区的当天；仅支持 <code>yyyymmdd</code>、<code>+N</code> 与 <code>-N</code>。</p>
+<p>🌗 <code>--light-mode</code> 与 <code>--lightMode</code> 可临时覆写页面主题；仅支持上游值 <code>true</code>（浅色）、<code>false</code>（深色）与 <code>system</code>（跟随系统）。</p>
 
 <h2>🕒 常用时区</h2>
 <p>

@@ -1,3 +1,5 @@
+import type { LightMode } from './config'
+
 export type GameServer = 'netease_cn' | 'tgc_global'
 
 export interface TargetDate {
@@ -41,7 +43,7 @@ export function formatDate(date: TargetDate) {
   return `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`
 }
 
-export function buildPageUrl(baseUrl: string, date: TargetDate, server: GameServer, displayTimeZone: string, enableShardProgressTimeline = true) {
+export function buildPageUrl(baseUrl: string, date: TargetDate, server: GameServer, displayTimeZone: string, enableShardProgressTimeline = true, lightMode: LightMode = 'system') {
   let url: URL
   try {
     url = new URL(baseUrl)
@@ -59,10 +61,18 @@ export function buildPageUrl(baseUrl: string, date: TargetDate, server: GameServ
   url.hash = ''
   url.searchParams.set('server', server)
   url.searchParams.set('timezone', displayTimeZone)
+  url.searchParams.set('lightMode', lightMode)
   url.searchParams.set('twelveHourMode', 'false')
   url.searchParams.set('fontSize', '1')
   url.searchParams.set('legTimeline', enableShardProgressTimeline ? '1' : '0')
   return url.toString()
+}
+
+export function resolveLightMode(input: string | undefined, fallback: LightMode): LightMode {
+  if (input === undefined) return fallback
+  const value = input.trim()
+  if (value === 'true' || value === 'false' || value === 'system') return value
+  throw new Error('lightMode 参数仅支持 true、false 或 system。')
 }
 
 function formatDatePath(date: TargetDate) {

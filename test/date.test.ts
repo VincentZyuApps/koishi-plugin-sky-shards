@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { addDays, buildPageUrl, parseTargetDate } from '../src/page'
+import { addDays, buildPageUrl, parseTargetDate, resolveLightMode } from '../src/page'
 import { renderShardScreenshot } from '../src/render'
 
 test('按服务器自然日解析偏移', () => {
@@ -24,10 +24,20 @@ test('生成包含服务器和时区的站点 URL', () => {
   assert.equal(url.pathname, '/sky-shards/zh/2026/08/24')
   assert.equal(url.searchParams.get('server'), 'netease_cn')
   assert.equal(url.searchParams.get('timezone'), 'Asia/Shanghai')
+  assert.equal(url.searchParams.get('lightMode'), 'system')
   assert.equal(url.searchParams.get('legTimeline'), '1')
-  const compactUrl = new URL(buildPageUrl('https://example.test/', { year: 2026, month: 8, day: 24 }, 'netease_cn', 'Asia/Shanghai', false))
+  const compactUrl = new URL(buildPageUrl('https://example.test/', { year: 2026, month: 8, day: 24 }, 'netease_cn', 'Asia/Shanghai', false, 'true'))
   assert.equal(compactUrl.searchParams.get('legTimeline'), '0')
+  assert.equal(compactUrl.searchParams.get('lightMode'), 'true')
   assert.throws(() => buildPageUrl('https://example.test/', { year: 2026, month: 8, day: 24 }, 'netease_cn', 'GMT+8'))
+})
+
+test('lightMode 参数覆写配置值，并拒绝非法上游值', () => {
+  assert.equal(resolveLightMode(undefined, 'system'), 'system')
+  assert.equal(resolveLightMode('true', 'false'), 'true')
+  assert.equal(resolveLightMode('false', 'true'), 'false')
+  assert.equal(resolveLightMode('system', 'false'), 'system')
+  assert.throws(() => resolveLightMode('dark', 'system'), /lightMode 参数仅支持/)
 })
 
 test('截图使用独立代理上下文并清理页面资源', async () => {

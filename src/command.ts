@@ -1,6 +1,6 @@
 import { Context, h, Session } from 'koishi'
-import { BROWSER_PROXY_MODE, Config } from './config'
-import { buildPageUrl, formatDate, GameServer, getServerZone, parseTargetDate } from './page'
+import { BROWSER_PROXY_MODE, Config, LightMode } from './config'
+import { buildPageUrl, formatDate, GameServer, getServerZone, parseTargetDate, resolveLightMode } from './page'
 import { resolveBrowserProxy } from './proxy'
 import { buildKeyboard, sendQQMarkdown } from './qq'
 import { renderShardScreenshot } from './render'
@@ -18,10 +18,12 @@ export function registerShardCommands(ctx: Context, config: Config) {
     const aliases = normalizeAliases(config[definition.aliasConfigKey], commandName)
     const command = ctx.command(`${commandName} [date:string]`, `查询光遇${definition.label}，参数支持 yyyymmdd、+N、-N。`)
     if (aliases.length) command.alias(...aliases)
-    command.action(async ({ session }, input) => {
-      if (!session) return
-      await handleCommand(ctx, session, config, { ...definition, name: commandName }, input, logger)
-    })
+    command
+      .option('lightMode', '--light-mode, --lightMode <lightMode:string> 临时覆写页面主题：true / false / system')
+      .action(async ({ session, options }, input) => {
+        if (!session) return
+        await handleCommand(ctx, session, config, { ...definition, name: commandName }, input, options.lightMode, logger)
+      })
   }
 }
 
@@ -30,13 +32,14 @@ function normalizeAliases(aliases: string[], commandName: string) {
   return [...new Set(aliases.map(alias => alias.trim()).filter(alias => alias && alias !== normalizedCommandName))]
 }
 
-async function handleCommand(ctx: Context, session: Session, config: Config, definition: { name: string, server: GameServer, label: string }, input: string | undefined, logger: ReturnType<Context['logger']>) {
+async function handleCommand(ctx: Context, session: Session, config: Config, definition: { name: string, server: GameServer, label: string }, input: string | undefined, lightModeInput: string | undefined, logger: ReturnType<Context['logger']>) {
   let waitingHintMessageId: string | undefined
   try {
     const quote = config.enableQuote && session.messageId ? h.quote(session.messageId) : ''
     if (config.enableWaitingHint) [waitingHintMessageId] = await session.send(`${quote}⏳ 正在获取并生成${definition.label}信息，请稍候...`)
     const date = parseTargetDate(input, definition.server)
-    const pageUrl = buildPageUrl(config.url, date, definition.server, config.displayTimeZone, config.enableShardProgressTimeline)
+    const lightMode = resolveLightMode(lightModeInput, config.lightMode)
+    const pageUrl = buildPageUrl(config.url, date, definition.server, config.displayTimeZone, config.enableShardProgressTimeline, lightMode)
     const proxy = resolveConfiguredProxy(ctx, config)
     logger.debug('render %s date=%s proxy=%s', definition.server, formatDate(date), proxy ? 'enabled' : 'disabled')
     const rendered = await renderShardScreenshot(
