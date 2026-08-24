@@ -29,19 +29,26 @@ export const usage = `
   </a>
 </p>
 
-<p>🔮 查询《光·遇》国服与国际服碎片，并将 Sky Shards 页面首屏渲染为图片。</p>
+<p>🔮 查询《光·遇》国服与国际服碎片，并将 <a href="https://github.com/VincentZyu233/sky-shards" target="_blank">Sky Shards</a> <a href="https://github.com/VincentZyu233/sky-shards/blob/production/README.zh-cn.md" target="_blank"><img src="https://img.shields.io/badge/上游说明-181717?style=flat-square&logo=github&logoColor=white" alt="上游说明"></a> 页面首屏渲染为图片。</p>
 
-<h2>交流反馈</h2>
-<p>Bug 反馈 / 建议 / 插件开发交流，欢迎加群：</p>
-<p><del>插件使用问题 / Bug反馈 / 插件开发交流，欢迎加入QQ群：<b>259248174</b> （这个群G了）</del></p>
-<p>插件使用问题 / Bug反馈 / 插件开发交流，欢迎加入QQ群：<b>1085190201</b></p>
-<p>在群里直接艾特我，回复的更快哦~ ✨</p>
+<h2>💬 交流反馈</h2>
+<p>🐛 Bug 反馈 / 💡 建议 / 👨‍💻 插件开发交流，欢迎加群：</p>
+<p><del>💬 插件使用问题 / 🐛 Bug反馈 / 👨‍💻 插件开发交流，欢迎加入QQ群：<b>259248174</b> 🎉（这个群G了）</del></p>
+<p>💬 插件使用问题 / 🐛 Bug反馈 / 👨‍💻 插件开发交流，欢迎加入QQ群：<b>1085190201</b> 🎉</p>
+<p>💡 在群里直接艾特我，回复的更快哦~ ✨</p>
+
+<h2>🚀 快速开始</h2>
+<ul>
+  <li>安装并启用提供 <code>puppeteer</code> 服务的插件，例如 <code>koishi-plugin-puppeteer</code> 或 <code>@shangxueink/koishi-plugin-puppeteer-without-canvas</code>。</li>
+  <li><code>url</code> 默认指向 Cloudflare Pages；也可替换为 GitHub Pages，或填写本地 / 公网 <code>pnpm dev</code> 启动的 Vite HTTP 地址。</li>
+  <li>大陆网络环境访问不稳定时，使用 <code>isolate</code> 分组配置 <code>proxyAgent</code> 并将 <code>browserProxyMode</code> 设为 <code>inherit</code>，或将其设为 <code>configured</code> 并填写 <code>browserProxyUrl</code>。</li>
+</ul>
 
 <h2>📌 指令</h2>
 <pre>
-国服碎片
-国际服碎片 +1
-国服碎片 20260824
+<code>国服碎片</code>
+<code>国际服碎片 +1</code>
+<code>国服碎片 20260824</code>
 </pre>
 
 <p>🗓️ 参数留空时查询对应服务器时区的当天；仅支持 <code>yyyymmdd</code>、<code>+N</code> 与 <code>-N</code>。</p>
