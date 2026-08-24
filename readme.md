@@ -33,6 +33,14 @@
 国服碎片 20260824
 ```
 
+**🖼️ Puppeteer 网页截图预览**
+
+![Puppeteer 网页截图预览](docs/images/preview/preview.puppeteer-screenshot.png)
+
+**💬 OneBot QQ 查询结果预览**
+
+![OneBot QQ 查询结果预览](docs/images/preview/preview.command-query.onebot-qq.png)
+
 日期参数留空时查询对应服务器时区的今天。它只接受严格的 `yyyymmdd`、`+N` 与 `-N`；偏移按对应服务器的自然日计算。
 
 QQ 官方 Bot 会在截图与直达链接后，额外发送 Markdown 摘要和三行快捷按钮：左列为国际服的今日、明日、后日，右列为国服的对应日期。
