@@ -51,7 +51,7 @@
 
 日期参数留空时查询对应服务器时区的今天。它只接受严格的 `yyyymmdd`、`+N` 与 `-N`；偏移按对应服务器的自然日计算。
 
-`--light-mode` 与 `--lightMode` 可临时覆写页面主题，只接受 Sky Shards 上游值：`true` 为浅色、`false` 为深色、`system` 为跟随 Chromium 系统配色。
+`--light-mode` 与 `--lightMode` 可临时覆写页面主题，只接受 Sky Shards 上游值：`true` 为浅色、`false` 为深色、`system` 为跟随浏览器（如 Chrome、Chromium）系统配色。
 
 QQ 官方 Bot 会在截图与直达链接后，额外发送 Markdown 摘要和三行快捷按钮：左列为国际服的今日、明日、后日，右列为国服的对应日期。
 
@@ -94,7 +94,7 @@ group:proxy:
 |---|---|---|---|
 | `url` | `string` | `"https://sky-shards-vincentzyu233-fork.pages.dev/"` | 默认使用 Cloudflare Pages [![Cloudflare Pages](https://img.shields.io/badge/Cloudflare%20Pages-Visit-6C757D?logo=cloudflare&logoColor=white&labelColor=F38020)](https://sky-shards-vincentzyu233-fork.pages.dev/)；也可改为 GitHub Pages [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Visit-6C757D?logo=github&logoColor=white&labelColor=181717)](https://vincentzyu233.github.io/sky-shards/)，或填写通过 `pnpm dev` 部署到本地或公网的 Vite HTTP 服务器地址 |
 | `displayTimeZone` | `string` | `"Asia/Shanghai"` | 截图中显示本地时间使用的 IANA 时区 |
-| `lightMode` | `"true" \| "false" \| "system"` | `"system"` | Sky Shards 页面与截图主题；`true` 为浅色、`false` 为深色、`system` 跟随 Puppeteer Chromium 系统配色，与上游 URL 参数保持一致 |
+| `lightMode` | `"true" \| "false" \| "system"` | `"system"` | Sky Shards 页面与截图主题；`true` 为浅色、`false` 为深色、`system` 跟随浏览器（如 Chrome、Chromium）系统配色，与上游 URL 参数保持一致 |
 | `enableGlobalShardOverrides` | `boolean` | `false` | 🧪 是否读取上游前端国际服临时覆写数据；国服不会读取覆写 |
 | `enableShardProgressTimeline` | `boolean` | `true` | 是否显示 Sky Shards 的碎片时间轴和进度条；关闭后改为紧凑的三波时间摘要 |
 | `screenshotDelayMs` | `number` | `666` | 截图前额外等待时间，单位毫秒；可用于等待网页动画和延迟加载内容完成 |

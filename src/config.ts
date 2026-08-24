@@ -122,7 +122,7 @@ export const Config: Schema<Config> = Schema.intersect([
     lightMode: Schema.union([
       Schema.const(LIGHT_MODE.LIGHT).description('☀️ 浅色模式（上游值 true）。'),
       Schema.const(LIGHT_MODE.DARK).description('🌙 深色模式（上游值 false）。'),
-      Schema.const(LIGHT_MODE.SYSTEM).description('💻 跟随 Puppeteer Chromium 的系统配色偏好（上游默认）。'),
+      Schema.const(LIGHT_MODE.SYSTEM).description('💻 跟随浏览器的系统配色偏好（上游默认）。'),
     ])
       .role('radio')
       .default(LIGHT_MODE.SYSTEM)
