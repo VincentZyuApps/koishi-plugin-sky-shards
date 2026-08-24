@@ -35,7 +35,13 @@
 
 **🖼️ Puppeteer 网页截图预览**
 
-![Puppeteer 网页截图预览](docs/images/preview/preview.puppeteer-screenshot.png)
+🌙 深色模式
+
+![Puppeteer 网页截图深色模式](docs/images/preview/preview.puppeteer-screenshot.dark.png)
+
+☀️ 浅色模式
+
+![Puppeteer 网页截图浅色模式](docs/images/preview/preview.puppeteer-screenshot.white.png)
 
 **💬 OneBot QQ 查询结果预览**
 
@@ -87,6 +93,8 @@ group:proxy:
 | `enableGlobalShardOverrides` | `boolean` | `false` | 🧪 是否读取上游前端国际服临时覆写数据；国服不会读取覆写 |
 | `enableShardProgressTimeline` | `boolean` | `true` | 是否显示 Sky Shards 的碎片时间轴和进度条；关闭后改为紧凑的三波时间摘要 |
 | `screenshotDelayMs` | `number` | `666` | 截图前额外等待时间，单位毫秒；可用于等待网页动画和延迟加载内容完成 |
+| `screenshotImageType` | `"png" \| "jpeg" \| "webp"` | `"png"` | Puppeteer 网页截图输出格式；PNG 无损但通常文件较大，JPEG 与 WebP 支持质量参数 |
+| `screenshotQuality` | `number` | `80` | Puppeteer 截图质量，范围为 `0-100`；仅 `jpeg` 和 `webp` 生效 |
 
 ### 🛜 浏览器网络配置
 

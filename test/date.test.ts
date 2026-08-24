@@ -32,6 +32,7 @@ test('生成包含服务器和时区的站点 URL', () => {
 
 test('截图使用独立代理上下文并清理页面资源', async () => {
   const calls: string[] = []
+  let screenshotOptions: { type: string; quality?: number } | undefined
   const page = {
     async setViewport() { calls.push('viewport') },
     async authenticate() { calls.push('authenticate') },
@@ -39,7 +40,7 @@ test('截图使用独立代理上下文并清理页面资源', async () => {
     async waitForSelector() { calls.push('selector') },
     async waitForNetworkIdle() { calls.push('idle') },
     async evaluate() { calls.push('evaluate') },
-    async screenshot() { calls.push('screenshot'); return Buffer.from('jpeg') },
+    async screenshot(options: { type: string; quality?: number }) { screenshotOptions = options; calls.push('screenshot'); return Buffer.from('webp') },
     async close() { calls.push('page-close') },
   }
   let proxyServer = ''
@@ -60,9 +61,25 @@ test('截图使用独立代理上下文并清理页面资源', async () => {
 
   const rendered = await renderShardScreenshot(ctx as never, 'https://example.test/', {
     server: 'socks5://127.0.0.1:7890', username: 'user', password: 'pass',
-  })
+  }, 0, false, 'webp', 72)
 
-  assert.equal(rendered.image.toString(), 'jpeg')
+  assert.equal(rendered.image.toString(), 'webp')
+  assert.equal(rendered.imageType, 'webp')
+  assert.deepEqual(screenshotOptions, { type: 'webp', quality: 72 })
   assert.equal(proxyServer, 'socks5://127.0.0.1:7890')
   assert.deepEqual(calls, ['viewport', 'authenticate', 'goto', 'selector', 'evaluate', 'idle', 'screenshot', 'page-close', 'context-close'])
+})
+
+test('PNG 截图不传质量参数', async () => {
+  let screenshotOptions: { type: string; quality?: number } | undefined
+  const page = {
+    async setViewport() {}, async goto() {}, async waitForSelector() {}, async evaluate() {},
+    async screenshot(options: { type: string; quality?: number }) { screenshotOptions = options; return Buffer.from('png') },
+    async close() {},
+  }
+  const ctx = { puppeteer: { browser: { async createBrowserContext() { return { async newPage() { return page }, async close() {} } } } } }
+
+  await renderShardScreenshot(ctx as never, 'https://example.test/', undefined, 0, false, 'png', 1)
+
+  assert.deepEqual(screenshotOptions, { type: 'png' })
 })

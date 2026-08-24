@@ -39,12 +39,21 @@ async function handleCommand(ctx: Context, session: Session, config: Config, def
     const pageUrl = buildPageUrl(config.url, date, definition.server, config.displayTimeZone, config.enableShardProgressTimeline)
     const proxy = resolveConfiguredProxy(ctx, config)
     logger.debug('render %s date=%s proxy=%s', definition.server, formatDate(date), proxy ? 'enabled' : 'disabled')
-    const rendered = await renderShardScreenshot(ctx, pageUrl, proxy, config.screenshotDelayMs, definition.server === 'tgc_global' && config.enableGlobalShardOverrides)
+    const rendered = await renderShardScreenshot(
+      ctx,
+      pageUrl,
+      proxy,
+      config.screenshotDelayMs,
+      definition.server === 'tgc_global' && config.enableGlobalShardOverrides,
+      config.screenshotImageType,
+      config.screenshotQuality,
+    )
     if (rendered.globalOverridesError) logger.warn('国际服临时覆写读取失败，将使用内置排期：%s', rendered.globalOverridesError)
     const summary = formatShardSummary({ date, server: definition.server, label: definition.label, pageUrl, now: rendered.renderedAt, globalOverrides: rendered.globalOverrides })
-    await session.send([quote, h.image(rendered.image, 'image/jpeg'), `\n${summary}`])
+    await session.send([quote, h.image(rendered.image, `image/${rendered.imageType}`), `\n${summary}`])
     if (config.enableQQMarkdown && session.platform === 'qq') {
-      const markdown = [`# ${definition.label}`, '', `> 日期：${formatDate(date)}`, `> 排期服务器时区：${getServerZone(definition.server)}`, '', `[【点我在 Sky Shards 网页 打开详情】](${pageUrl})`].join('\n')
+      const serverEmoji = definition.server === 'netease_cn' ? '🇨🇳' : '🌍'
+      const markdown = [`# ${serverEmoji} ${definition.label}`, '', `> 📅 日期：${formatDate(date)}`, `> 🕒 排期服务器时区：${getServerZone(definition.server)}`, '', `🔗 [【点我在 Sky Shards 网页 打开详情】](${pageUrl})`].join('\n')
       const keyboard = buildKeyboard(config.qqMarkdownKeyboardJson, { commandName: definition.name, cnCommandName: config.cnCommandName, globalCommandName: config.globalCommandName, pageUrl })
       await sendQQMarkdown(session, markdown, keyboard).catch(error => logger.warn('QQ Markdown 发送失败，将保留截图回复：%s', error instanceof Error ? error.message : String(error)))
     }

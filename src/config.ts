@@ -14,6 +14,15 @@ export const BROWSER_PROXY_MODE = {
 
 export type BrowserProxyMode = typeof BROWSER_PROXY_MODE[keyof typeof BROWSER_PROXY_MODE]
 
+/** 🖼️ Puppeteer 截图输出格式 */
+export const SCREENSHOT_IMAGE_TYPES = {
+  PNG: 'png',
+  JPEG: 'jpeg',
+  WEBP: 'webp',
+} as const
+
+export type ScreenshotImageType = typeof SCREENSHOT_IMAGE_TYPES[keyof typeof SCREENSHOT_IMAGE_TYPES]
+
 export interface Config {
   // ==================
   // 💬 消息发送配置字段
@@ -37,6 +46,8 @@ export interface Config {
   enableGlobalShardOverrides: boolean
   enableShardProgressTimeline: boolean
   screenshotDelayMs: number
+  screenshotImageType: ScreenshotImageType
+  screenshotQuality: number
 
   // ==================
   // 🌐 浏览器网络配置字段
@@ -111,6 +122,21 @@ export const Config: Schema<Config> = Schema.intersect([
       .step(1)
       .default(666)
       .description('⏳ 截图前额外等待时间，单位毫秒。可用于等待网页动画和延迟加载内容完成。'),
+    screenshotImageType: Schema.union([
+      Schema.const(SCREENSHOT_IMAGE_TYPES.PNG).description('🖼️ PNG：无损格式，文件通常较大，不支持质量参数。'),
+      Schema.const(SCREENSHOT_IMAGE_TYPES.JPEG).description('🌄 JPEG：适合网页截图，支持质量参数。'),
+      Schema.const(SCREENSHOT_IMAGE_TYPES.WEBP).description('🌐 WebP：体积通常更小，支持质量参数。'),
+    ])
+      .role('radio')
+      .default(SCREENSHOT_IMAGE_TYPES.PNG)
+      .description('📤 Puppeteer 网页截图的输出图片格式。'),
+    screenshotQuality: Schema.number()
+      .role('slider')
+      .min(0)
+      .max(100)
+      .step(1)
+      .default(80)
+      .description('🎚️ Puppeteer 截图质量，范围为 0-100；仅 JPEG 和 WebP 生效。'),
   }).description('🌐 Sky Shards 页面与截图配置'),
 
   // ==================

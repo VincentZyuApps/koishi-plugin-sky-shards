@@ -1,4 +1,5 @@
 import { Context } from 'koishi'
+import { ScreenshotImageType } from './config'
 import { BrowserProxy } from './proxy'
 
 interface BrowserContextLike {
@@ -13,7 +14,7 @@ interface PageLike {
   waitForSelector(selector: string, options: { timeout: number }): Promise<unknown>
   waitForNetworkIdle?(options: { idleTime: number; timeout: number }): Promise<unknown>
   evaluate<T, A = undefined>(fn: (arg: A) => T | Promise<T>, arg?: A): Promise<T>
-  screenshot(options: { type: 'jpeg'; quality: number }): Promise<Buffer>
+  screenshot(options: { type: ScreenshotImageType; quality?: number }): Promise<Buffer>
   close(): Promise<void>
 }
 
@@ -27,6 +28,7 @@ const globalOverridesUrl = 'https://sky-shardfig.plutoy.top/minified.json'
 
 export interface RenderShardResult {
   image: Buffer
+  imageType: ScreenshotImageType
   renderedAt: Date
   globalOverrides?: unknown
   globalOverridesError?: string
@@ -38,6 +40,8 @@ export async function renderShardScreenshot(
   proxy?: BrowserProxy,
   screenshotDelayMs = 0,
   enableGlobalShardOverrides = false,
+  screenshotImageType: ScreenshotImageType = 'png',
+  screenshotQuality = 80,
 ): Promise<RenderShardResult> {
   const browser = (ctx as any).puppeteer?.browser as BrowserLike | undefined
   if (!browser?.createBrowserContext) {
@@ -63,7 +67,11 @@ export async function renderShardScreenshot(
     await waitForScreenshotDelay(screenshotDelayMs)
     const renderedAt = new Date()
     const result: RenderShardResult = {
-      image: await page.screenshot({ type: 'jpeg', quality: 85 }),
+      image: await page.screenshot({
+        type: screenshotImageType,
+        ...(screenshotImageType !== 'png' ? { quality: screenshotQuality } : {}),
+      }),
+      imageType: screenshotImageType,
       renderedAt,
     }
     if (enableGlobalShardOverrides) {
