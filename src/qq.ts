@@ -45,43 +45,43 @@ export function buildKeyboard(template: string, variables: KeyboardVariables) {
 
 export async function sendQQMarkdown(session: Session, markdown: string, keyboard: object) {
   const bot = session.bot as any
-  if (isCrackAdapter(bot)) {
-    await session.send(h('qq:rawmarkdown', buildCrackRawMarkdownAttrs(markdown, keyboard)))
-    return
-  }
+  const internal = bot?.internal
 
-  const payload = buildOfficialMarkdownPayload(session, markdown, keyboard)
-  const internal = bot.internal
-  if (isDirectSession(session) && internal?.sendPrivateMessage) {
-    await internal.sendPrivateMessage(session.channelId, payload)
-    return
-  }
-  if (internal?.sendMessage) {
-    await internal.sendMessage(session.channelId, payload)
-    return
+  if (internal) {
+    const payload = buildOfficialMarkdownPayload(session, markdown, keyboard)
+    if (isDirectSession(session) && internal.sendPrivateMessage) {
+      const targetId = session.guildId || session.channelId || session.userId
+      await internal.sendPrivateMessage(targetId, payload)
+      return
+    }
+    if (internal.sendMessage) {
+      await internal.sendMessage(session.channelId, payload)
+      return
+    }
   }
 
   const qq = (session as any).qq
-  if (qq?.sendPrivateMessage && isDirectSession(session)) {
-    await qq.sendPrivateMessage(session.channelId, payload)
-    return
+  if (qq) {
+    const payload = buildOfficialMarkdownPayload(session, markdown, keyboard)
+    if (isDirectSession(session) && qq.sendPrivateMessage) {
+      await qq.sendPrivateMessage(session.channelId, payload)
+      return
+    }
+    if (qq.sendMessage) {
+      await qq.sendMessage(session.channelId, payload)
+      return
+    }
   }
-  if (qq?.sendMessage) {
-    await qq.sendMessage(session.channelId, payload)
-    return
-  }
-  throw new Error('当前 QQ 适配器不支持发送 Markdown 键盘消息。')
-}
 
-function isCrackAdapter(bot: any) {
-  return !!bot?.config && 'autoStreamText' in bot.config
+  // 兜底降级：在无 internal 场景下走元素发送
+  await session.send(h('qq:rawmarkdown', buildRawMarkdownAttrs(markdown, keyboard)))
 }
 
 function isDirectSession(session: Session) {
   return session.isDirect || String(session.channelId || '').startsWith('private:')
 }
 
-function buildCrackRawMarkdownAttrs(markdown: string, keyboard: object) {
+function buildRawMarkdownAttrs(markdown: string, keyboard: object) {
   const attrs: any = {
     markdown: { content: markdown },
   }
