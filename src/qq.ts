@@ -1,4 +1,5 @@
 import { h, Session } from 'koishi'
+import type { ShardCardMeta } from './card'
 
 const DEFAULT_KEYBOARD = {
   rows: [
@@ -75,6 +76,82 @@ export async function sendQQMarkdown(session: Session, markdown: string, keyboar
 
   // 兜底降级：在无 internal 场景下走元素发送
   await session.send(h('qq:rawmarkdown', buildRawMarkdownAttrs(markdown, keyboard)))
+}
+
+export async function sendQqTuwenCard(session: Session, meta: ShardCardMeta, logger?: any, verbose = false): Promise<boolean> {
+  if (session.platform !== 'qq') return false
+
+  const payload: any = {
+    msg_type: 8,
+    card: {
+      type: 'tuwen',
+      content: {
+        title: meta.title,
+        description: meta.description,
+        url: meta.url,
+        pic_url: meta.picUrl,
+      },
+    },
+  }
+
+  const isDirect = isDirectSession(session)
+  const target = isDirect
+    ? (session.guildId || session.channelId || session.userId || '').replace(/^private:/, '')
+    : session.channelId
+
+  // 5 分钟超时窗口内自动装配 msg_id / msg_seq
+  if (session.messageId && session.timestamp && Date.now() - session.timestamp < 300_000) {
+    const state = session as any
+    state.seq ||= 0
+    payload.msg_id = session.messageId
+    payload.msg_seq = ++state.seq
+  }
+
+  if (verbose) {
+    logger?.info('🚀 [QQ图文卡片] 准备发送: 目标=%s msg_id=%s msg_seq=%s 封面=%s\nPayload: %j',
+      target, payload.msg_id ?? '无', payload.msg_seq ?? '无', meta.picUrl, payload)
+  }
+
+  const bot = session.bot as any
+  const internal = bot?.internal
+
+  try {
+    let res: any
+    if (internal) {
+      if (isDirect && internal.sendPrivateMessage) {
+        res = await internal.sendPrivateMessage(target, payload)
+        if (verbose) logger?.info('✅ [QQ图文卡片] internal.sendPrivateMessage 发送成功: %j', res ?? 'ok')
+        return true
+      }
+      if (internal.sendMessage) {
+        res = await internal.sendMessage(target, payload)
+        if (verbose) logger?.info('✅ [QQ图文卡片] internal.sendMessage 发送成功: %j', res ?? 'ok')
+        return true
+      }
+    }
+
+    const qq = (session as any).qq
+    if (qq) {
+      if (isDirect && qq.sendPrivateMessage) {
+        res = await qq.sendPrivateMessage(session.channelId, payload)
+        if (verbose) logger?.info('✅ [QQ图文卡片] qq.sendPrivateMessage 发送成功: %j', res ?? 'ok')
+        return true
+      }
+      if (qq.sendMessage) {
+        res = await qq.sendMessage(session.channelId, payload)
+        if (verbose) logger?.info('✅ [QQ图文卡片] qq.sendMessage 发送成功: %j', res ?? 'ok')
+        return true
+      }
+    }
+
+    // 兜底降级：走 session.send(h('qq:card', payload.card))
+    res = await session.send(h('qq:card', payload.card))
+    if (verbose) logger?.info('✅ [QQ图文卡片] session.send(qq:card) 降级发送完成: %j', res ?? 'ok')
+    return true
+  } catch (error) {
+    logger?.warn?.('QQ 图文卡片 (msg_type: 8) 发送失败：%s', error instanceof Error ? error.message : String(error))
+    return false
+  }
 }
 
 function isDirectSession(session: Session) {

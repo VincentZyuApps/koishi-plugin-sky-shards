@@ -10,6 +10,7 @@ interface ShardOccurrence {
 
 interface ShardSchedule {
   hasShard: boolean
+  isRed: boolean
   map: MapId
   occurrences: ShardOccurrence[]
 }
@@ -24,9 +25,12 @@ export interface GlobalShardOverride {
 
 export interface ShardStatus {
   hasShard: boolean
+  isRed: boolean
   isToday: boolean
   currentMap?: string
   nextCountdown?: string
+  mapId?: string
+  mapName?: string
 }
 
 export interface ShardSummaryOptions {
@@ -99,14 +103,21 @@ export function getShardStatus(date: TargetDate, server: GameServer, now = new D
   const selected = toServerDate(date, server)
   const schedule = getSchedule(selected, server, server === 'tgc_global' ? getGlobalShardOverride(remoteConfig, date) : undefined)
   const isToday = current.hasSame(selected, 'day')
-  if (!isToday) return { hasShard: schedule.hasShard, isToday }
+  const mapId = schedule.hasShard ? schedule.map : undefined
+  const mapName = schedule.hasShard ? mapNames[schedule.map] : undefined
+
+  if (!isToday) {
+    return { hasShard: schedule.hasShard, isRed: schedule.isRed, isToday, mapId, mapName }
+  }
 
   const active = schedule.occurrences.find(({ land, end }) => land <= current && current < end)
-  if (active && schedule.hasShard) return { hasShard: true, isToday, currentMap: mapNames[schedule.map] }
+  if (active && schedule.hasShard) {
+    return { hasShard: true, isRed: schedule.isRed, isToday, currentMap: mapNames[schedule.map], mapId, mapName }
+  }
 
   const upcoming = schedule.hasShard ? schedule.occurrences.find(({ land }) => land > current)?.land : undefined
   const next = upcoming ?? findNextLand(selected.plus({ days: 1 }), server, remoteConfig)
-  return { hasShard: schedule.hasShard, isToday, nextCountdown: formatCountdown(next.diff(current, 'seconds').seconds) }
+  return { hasShard: schedule.hasShard, isRed: schedule.isRed, isToday, nextCountdown: formatCountdown(next.diff(current, 'seconds').seconds), mapId, mapName }
 }
 
 export function formatShardSummary(options: ShardSummaryOptions) {
@@ -132,12 +143,14 @@ function getGlobalSchedule(date: DateTime, override?: GlobalShardOverride): Shar
   const configIndex = override?.group ?? (day % 2 === 1 ? ((day - 1) / 2) % 3 + 2 : day / 2 % 2)
   const config = globalConfigs[configIndex]!
   const hasShard = override?.hasShard ?? !(config.noShardWeekdays as readonly number[]).includes(date.weekday)
+  const isRed = override?.isRed ?? (configIndex >= 2)
   let firstStart = date.plus(config.offset)
   if (date.weekday === 7 && date.isInDST !== firstStart.isInDST) {
     firstStart = firstStart.plus({ hours: firstStart.isInDST ? -1 : 1 })
   }
   return {
     hasShard,
+    isRed,
     map: override?.map ?? config.maps[realmIndex]!,
     occurrences: Array.from({ length: 3 }, (_, index) => {
       const start = firstStart.plus({ hours: config.intervalHours * index })
@@ -151,8 +164,10 @@ function getCnSchedule(date: DateTime): ShardSchedule {
   const noShardByHalfMonth = date.day <= 15 ? date.weekday === 3 || date.weekday === 5 : date.weekday === 2 || date.weekday === 6
   const config = cnConfigs[date.weekday] ?? cnConfigs[2]!
   const realmIndex = (date.day + 2) % 5
+  const isRed = date.weekday >= 5
   return {
     hasShard: !noShardByWeekday && !noShardByHalfMonth,
+    isRed,
     map: config.maps[realmIndex]!,
     occurrences: config.times.map(([landHour, landMinute, endHour, endMinute]) => ({
       land: date.plus({ hours: landHour, minutes: landMinute }),
