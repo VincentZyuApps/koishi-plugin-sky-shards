@@ -49,6 +49,10 @@
 
 ![OneBot QQ 查询结果预览](docs/images/preview/preview.command-query.onebot-qq.png)
 
+**🎴 QQ 官方 Bot 图文大卡片（点击直达网页）预览**
+
+![QQ 官方 Bot 图文大卡片预览](docs/images/preview/preview.qq-tuwen-card.click-to-open-browser.png)
+
 日期参数留空时查询对应服务器时区的今天。它只接受严格的 `yyyymmdd`、`+N` 与 `-N`；偏移按对应服务器的自然日计算。
 
 `--light-mode` 与 `--lightMode` 可临时覆写页面主题，只接受 Sky Shards 上游值：`true` 为浅色、`false` 为深色、`system` 为跟随浏览器（如 Chrome、Chromium）系统配色。
@@ -114,3 +118,15 @@ group:proxy:
 |---|---|---|---|
 | `enableQQMarkdown` | `boolean` | `true` | QQ 官方 Bot 在截图后额外发送 Markdown 摘要和快捷按钮 |
 | `qqMarkdownKeyboardJson` | `string` | 默认按钮 JSON | 自定义 QQ Markdown 按钮；支持 `${commandName}`、`${cnCommandName}`、`${globalCommandName}` 和 `${pageUrl}` 变量；JSON 无效时回退默认按钮 |
+| `addQqTuwen` | `boolean` | `true` | 是否在 QQ 官方 Bot 平台发送「图文大卡片 (msg_type: 8)」，展示碎片预报封面与直达网页 |
+| `qqTuwenCoverMode` | `"dynamic" \| "fixed"` | `"dynamic"` | QQ 图文大卡片封面展示模式：`dynamic` 根据降落地图动态匹配，`fixed` 使用固定封面 |
+
+### 💬 OneBotV11 的 qqbot 配置
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|---|---|---|---|
+| `addOnebotCard` | `boolean` | `false` | 是否在 OneBot 平台发送碎片预报富文本交互卡片 |
+| `onebotInfoCardProtocol` | `"custom" \| "163" \| "qq" \| "kugou"` | `"custom"` | 预报信息卡片发送所使用的协议底座 |
+| `onebotCardCoverMode` | `"dynamic" \| "fixed"` | `"dynamic"` | OneBot 预报卡片封面展示模式 |
+| `addOnebot163MusicCard` | `boolean` | `false` | 是否额外发送一张光遇官方原声音乐试听卡片 |
+| `onebotMapMusicTable` | `array` | 表格预设 | 各大星盘地图与碎石类型对应的网易云音乐曲库配置 |

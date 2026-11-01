@@ -307,7 +307,7 @@ export const Config: Schema<Config> = Schema.intersect([
   Schema.object({
     addOnebotCard: Schema.boolean()
       .experimental()
-      .default(true)
+      .default(false)
       .description('🧪 是否在 OneBot 平台发送碎片预报富文本交互卡片。'),
     onebotInfoCardProtocol: Schema.union([
       Schema.const(ONEBOT_CARD_PROTOCOL.CUSTOM).description('自定义卡片 (custom)（推荐/默认，支持自定义标题与传送门封面）'),
@@ -327,7 +327,7 @@ export const Config: Schema<Config> = Schema.intersect([
       .description('🎨 OneBot 预报卡片封面展示模式。'),
     addOnebot163MusicCard: Schema.boolean()
       .experimental()
-      .default(true)
+      .default(false)
       .description('🎵 是否在 OneBot 平台额外发送一张真正的光遇官方原声音乐卡片（支持在群聊内直接点击试听各星盘 BGM）。'),
     onebotMapMusicTable: Schema.array(Schema.object({
       map: Schema.union([
