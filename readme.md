@@ -39,19 +39,19 @@
 
 🌙 深色模式
 
-![Puppeteer 网页截图深色模式](docs/images/preview/preview.puppeteer-screenshot.dark.png)
+![Puppeteer 网页截图深色模式](https://cdn.jsdelivr.net/gh/VincentZyuApps/koishi-plugin-sky-shards@main/docs/images/preview/preview.puppeteer-screenshot.dark.png)
 
 ☀️ 浅色模式
 
-![Puppeteer 网页截图浅色模式](docs/images/preview/preview.puppeteer-screenshot.white.png)
+![Puppeteer 网页截图浅色模式](https://cdn.jsdelivr.net/gh/VincentZyuApps/koishi-plugin-sky-shards@main/docs/images/preview/preview.puppeteer-screenshot.white.png)
 
 **💬 OneBot QQ 查询结果预览**
 
-![OneBot QQ 查询结果预览](docs/images/preview/preview.command-query.onebot-qq.png)
+![OneBot QQ 查询结果预览](https://cdn.jsdelivr.net/gh/VincentZyuApps/koishi-plugin-sky-shards@main/docs/images/preview/preview.command-query.onebot-qq.png)
 
 **🎴 QQ 官方 Bot 图文大卡片（点击直达网页）预览**
 
-![QQ 官方 Bot 图文大卡片预览](docs/images/preview/preview.qq-tuwen-card.click-to-open-browser.png)
+![QQ 官方 Bot 图文大卡片预览](https://cdn.jsdelivr.net/gh/VincentZyuApps/koishi-plugin-sky-shards@main/docs/images/preview/preview.qq-tuwen-card.click-to-open-browser.png)
 
 日期参数留空时查询对应服务器时区的今天。它只接受严格的 `yyyymmdd`、`+N` 与 `-N`；偏移按对应服务器的自然日计算。
 
